@@ -23,23 +23,28 @@ def file_len(fname):
     return i + 1
 
 
-def rankfile_to_list(rankfile, groupfile, db_enogs):
+def rankfile_to_list(rankfile, groupfile_path = None, db_enogs):
     # make a list of enog_ranks which should be added to the db
     enog_rank_list = []
 
     # create a dictionary over all entries in the .ranks.group file, with the featuregroup-name as key and as list of
     # corresponding enogs as value
     featuregroup_dict = {}
-    for groupline in groupfile:
-        groupname, enogs_in_group = groupline.rstrip().split("\t")
-        enogs_in_group = enogs_in_group.split("/")
-        featuregroup_dict[groupname] = enogs_in_group
+    if groupfile_path:
+        with open(groupfile_path, "r") as groupfile:
+            for groupline in groupfile:
+                groupname, enogs_in_group = groupline.rstrip().split("\t")
+                enogs_in_group = enogs_in_group.split("/")
+                featuregroup_dict[groupname] = enogs_in_group
 
     # skip first line
-    for counter, line in enumerate(rankfile):
-        if counter == 0:
+    header = True
+    for line in rankfile:
+        if header:
+            header = False
             continue
-        enog_name, score, verdict = line.split()
+        counter, enog_name, score = line.split()
+        counter = int(counter)
 
         try:
             # check if the enog is contained in the database, if yes, add the enog_ranks object to the enog_rank_list try:
@@ -122,21 +127,23 @@ if db_enogs:
         # read the .rank file of the model and extract enogs and their ranks
         num_lines_ranksfile = file_len(PICAMODELFOLDER + "/" + picamodel + "/" + picamodel + ".rank")
         with open(PICAMODELFOLDER + "/" + picamodel + "/" + picamodel + ".rank", "r") as rankfile:
-            with open(PICAMODELFOLDER + "/" + picamodel + "/" + picamodel + ".rank.groups", "r") as groupfile:
-                print("Creating list of enogs...")
-                try:
-                    enog_rank_list_filled = rankfile_to_list(rankfile, groupfile, db_enogs)
-                except:  # specifc error here?
-                    newmodel.delete()
-                    sys.exit("\n There was a problem when creating enog lists")
+            print("Creating list of enogs...")
+            groupfile_path = PICAMODELFOLDER + "/" + picamodel + "/" + picamodel + ".rank.groups"
+            if not os.path.isfile(groupfile_path):
+                groupfile_path = None
+            try:
+                enog_rank_list_filled = rankfile_to_list(rankfile, groupfile_path, db_enogs)
+            except:  # specifc error here?
+                newmodel.delete()
+                sys.exit("\n There was a problem when creating enog lists")
 
-                print(" \n Saving to database... ")
-                try:
-                    EnogRank.objects.bulk_create(enog_rank_list_filled)
-                except Exception as e:  # specifc error here?
-                    newmodel.delete()
-                    print(e)
-                    sys.exit("\n There was a problem when writing enog_ranks-objects to the db")
+            print(" \n Saving to database... ")
+            try:
+                EnogRank.objects.bulk_create(enog_rank_list_filled)
+            except Exception as e:  # specifc error here?
+                newmodel.delete()
+                print(e)
+                sys.exit("\n There was a problem when writing enog_ranks-objects to the db")
 
         print("Processing the model's accuracy file...")
         # Read the model's accuracy file and enter the data into the db
