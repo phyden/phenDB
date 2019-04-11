@@ -12,7 +12,7 @@ django.setup()
 from phenotypePredictionApp.models import *
 
 
-PICAMODELFOLDER = "/apps/PICA/newmodels"
+PICAMODELFOLDER = "/apps/trex/newmodels"
 all_picamodels = os.listdir(PICAMODELFOLDER)
 
 

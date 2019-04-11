@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-BASEDIR="/apps/phenDB"
-DB="phenDB"
+BASEDIR="/apps/phenDB_devel_HP"
+DB="phenDB_trex"
 
-export PYTHONPATH="/apps/phenDB/source/web_server:$PYTHONPATH"
+export PYTHONPATH="$BASEDIR/source/web_server:$PYTHONPATH"
 export DJANGO_SETTINGS_MODULE="phenotypePrediction.settings"

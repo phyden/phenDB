@@ -25,7 +25,7 @@ class JobDisplay(admin.ModelAdmin):
 
     def link_to_results(obj):
         if obj.fileOutput:
-            return "phen.csb.univie.ac.at/phendb/results/{k}".format(k=obj.key)
+            return "https://phen.csb.univie.ac.at/phendb/results/{k}".format(k=obj.key)
         return obj.fileOutput
 
     def uploaded_file_name(obj):
