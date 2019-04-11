@@ -23,7 +23,7 @@ def file_len(fname):
     return i + 1
 
 
-def rankfile_to_list(rankfile, groupfile_path = None, db_enogs):
+def rankfile_to_list(rankfile, groupfile_path, db_enogs):
     # make a list of enog_ranks which should be added to the db
     enog_rank_list = []
 
