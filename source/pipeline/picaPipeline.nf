@@ -455,7 +455,7 @@ process pica {
     """
     echo -ne "${binname}\t" > tempfile.tmp
     cut -f2 $hmmeritem | tr "\n" "\t" >> tempfile.tmp
-    test.py -m $TEST_MODEL -t $RULEBOOK -s tempfile.tmp > picaout.result
+    pica.py predict -c $TEST_MODEL -g tempfile.tmp > picaout.result
     echo -n \$(cat picaout.result | tail -n1 | cut -f2,3)
     """
 }
