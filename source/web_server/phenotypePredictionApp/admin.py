@@ -1,9 +1,9 @@
 from django.contrib import admin
+from django.utils.html import format_html
 import os
 
 # Register your models here.
 from .models import Job, PicaModel, Bin, BinInJob
-
 
 # create a display for the Job table
 class JobDisplay(admin.ModelAdmin):
@@ -25,7 +25,7 @@ class JobDisplay(admin.ModelAdmin):
 
     def link_to_results(obj):
         if obj.fileOutput:
-            return "https://phen.csb.univie.ac.at/phendb/results/{k}".format(k=obj.key)
+            return format_html('<a href="https://phen.csb.univie.ac.at/phendb/results/{k}">{k}</a>', k=obj.key)
         return obj.fileOutput
 
     def uploaded_file_name(obj):
