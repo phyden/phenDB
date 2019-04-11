@@ -156,8 +156,8 @@ if db_enogs:
                 acc_list.append(PicaModelAccuracy(model=newmodel,
                                                   comple=this_data["completeness"], conta=this_data["contamination"],
                                                   mean_balanced_accuracy=this_data["mean_balanced_accuracy"],
-                                                  mean_fp_rate=this_data["mean_fp_rate"],
-                                                  mean_fn_rate=this_data["mean_fn_rate"]))
+                                                  mean_fp_rate=None,  # not calculated currently
+                                                  mean_fn_rate=None)) # not calculated currently, TODO: remove
             print("writing accuracy entries into db...")
             PicaModelAccuracy.objects.bulk_create(acc_list)
 
